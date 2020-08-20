@@ -138,7 +138,6 @@ const GUIComponent = props => {
 
     return (<MediaQuery minWidth={layout.fullSizeMinWidth}>{isFullSize => {
         const stageSize = resolveStageSize(stageSizeMode, isFullSize);
-
         return isPlayerOnly ? (
             <StageWrapper
                 isFullScreen={isFullScreen}
@@ -146,6 +145,7 @@ const GUIComponent = props => {
                 isRtl={isRtl}
                 loading={loading}
                 stageSize={STAGE_SIZE_MODES.large}
+                stageOnly={props.stageOnly}
                 vm={vm}
             >
                 {alertsVisible ? (
@@ -418,7 +418,8 @@ GUIComponent.propTypes = {
     targetIsStage: PropTypes.bool,
     telemetryModalVisible: PropTypes.bool,
     tipsLibraryVisible: PropTypes.bool,
-    vm: PropTypes.instanceOf(VM).isRequired
+    vm: PropTypes.instanceOf(VM).isRequired,
+    stageOnly: PropTypes.bool
 };
 GUIComponent.defaultProps = {
     backpackHost: null,
@@ -438,7 +439,8 @@ GUIComponent.defaultProps = {
     isShared: false,
     loading: false,
     showComingSoon: false,
-    stageSizeMode: STAGE_SIZE_MODES.large
+    stageSizeMode: STAGE_SIZE_MODES.large,
+    stageOnly: false
 };
 
 const mapStateToProps = state => ({

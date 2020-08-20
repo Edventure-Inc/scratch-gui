@@ -12,11 +12,14 @@ import {SVGRenderer as V2SVGAdapter} from 'scratch-svg-renderer';
 import {BitmapAdapter as V2BitmapAdapter} from 'scratch-svg-renderer';
 
 import StageComponent from '../components/stage/stage.jsx';
+import {StageOnly} from '../components/stage/stage-only.jsx';
 
 import {
     activateColorPicker,
     deactivateColorPicker
 } from '../reducers/color-picker';
+import {setFullScreen} from '../reducers/mode';
+import {setStageSize} from '../reducers/stage-size';
 
 const colorPickerRadius = 20;
 const dragThreshold = 3; // Same as the block drag threshold
@@ -77,6 +80,9 @@ class Stage extends React.Component {
         this.attachMouseEvents(this.canvas);
         this.updateRect();
         this.props.vm.runtime.addListener('QUESTION', this.questionListener);
+        if (!this.props.isFullScreen) {
+            this.props.onSetStageFull();
+        }
     }
     shouldComponentUpdate (nextProps, nextState) {
         return this.props.stageSize !== nextProps.stageSize ||
@@ -411,8 +417,19 @@ class Stage extends React.Component {
         const {
             vm, // eslint-disable-line no-unused-vars
             onActivateColorPicker, // eslint-disable-line no-unused-vars
+            stageOnly,
             ...props
         } = this.props;
+        if (stageOnly) {
+            return (<StageOnly
+                canvas={this.canvas}
+                dragRef={this.setDragCanvas}
+                question={this.state.question}
+                onDoubleClick={this.handleDoubleClick}
+                onQuestionAnswered={this.handleQuestionAnswered}
+                {...props}
+            />);
+        }
         return (
             <StageComponent
                 canvas={this.canvas}
@@ -436,7 +453,9 @@ Stage.propTypes = {
     onDeactivateColorPicker: PropTypes.func,
     stageSize: PropTypes.oneOf(Object.keys(STAGE_DISPLAY_SIZES)).isRequired,
     useEditorDragStyle: PropTypes.bool,
-    vm: PropTypes.instanceOf(VM).isRequired
+    vm: PropTypes.instanceOf(VM).isRequired,
+    stageOnly: PropTypes.bool,
+    onSetStageFull: PropTypes.func
 };
 
 Stage.defaultProps = {
@@ -454,7 +473,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onActivateColorPicker: () => dispatch(activateColorPicker()),
-    onDeactivateColorPicker: color => dispatch(deactivateColorPicker(color))
+    onDeactivateColorPicker: color => dispatch(deactivateColorPicker(color)),
+    onSetStageFull: () => dispatch(setFullScreen(true)),
+    onSetStageLarge: () => dispatch(setStageSize(STAGE_DISPLAY_SIZES.large))
 });
 
 export default connect(
