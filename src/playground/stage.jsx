@@ -18,19 +18,18 @@ if (process.env.NODE_ENV === 'production' && typeof window === 'object') {
 }
 
 import styles from './player.css';
+import {getQueryString} from '../lib/util';
 
-const Player = ({isPlayerOnly, projectId}) => (
-    <Box className={styles.stageOnly}>
-        <GUI
-            stageOnly
-            projectId={projectId}
-        />
-    </Box>
-);
-
-Player.propTypes = {
-    isPlayerOnly: PropTypes.bool,
-    projectId: PropTypes.string
+const Player = () => {
+    const projectId = getQueryString('projectId') || '';
+    return (
+        <Box className={styles.stageOnly}>
+            <GUI
+                stageOnly
+                projectId={projectId}
+            />
+        </Box>
+    );
 };
 
 const mapStateToProps = state => ({

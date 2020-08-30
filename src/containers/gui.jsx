@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import ReactModal from 'react-modal';
 import VM from 'scratch-vm';
 import {injectIntl, intlShape} from 'react-intl';
-
+import axios from 'axios';
 import ErrorBoundaryHOC from '../lib/error-boundary-hoc.jsx';
 import {
     getIsError,
@@ -44,6 +44,27 @@ class GUI extends React.Component {
         setIsScratchDesktop(this.props.isScratchDesktop);
         this.props.onStorageInit(storage);
         this.props.onVmInit(this.props.vm);
+        if (this.props.projectId && this.props.stageOnly) {
+            const url = `https://ego-1300213476.cos.ap-chengdu.myqcloud.com/test.sb3`;
+            console.log(url);
+            axios.get(url, {
+                withCredentials: true
+            }).then(res => {
+                console.log(res);
+                return res.blob();
+            })
+                .then(blob => {
+                    const reader = new FileReader(blob);
+                    reader.onload = () => this.props.vm.loadProject(reader.result)
+                        .then(() => {
+                            console.log('加载成功');
+                        });
+                    reader.readAsArrayBuffer(blob);
+                })
+                .catch(err => {
+                    console.log('加载失败', err);
+                });
+        }
     }
     componentDidUpdate (prevProps) {
         if (this.props.projectId !== prevProps.projectId && this.props.projectId !== null) {
@@ -112,7 +133,8 @@ GUI.propTypes = {
     projectHost: PropTypes.string,
     projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     telemetryModalVisible: PropTypes.bool,
-    vm: PropTypes.instanceOf(VM).isRequired
+    vm: PropTypes.instanceOf(VM).isRequired,
+    stageOnly: PropTypes.bool
 };
 
 GUI.defaultProps = {
@@ -120,7 +142,8 @@ GUI.defaultProps = {
     onStorageInit: storageInstance => storageInstance.addOfficialScratchWebStores(),
     onProjectLoaded: () => {},
     onUpdateProjectId: () => {},
-    onVmInit: (/* vm */) => {}
+    onVmInit: (/* vm */) => {},
+    stageOnly: false
 };
 
 const mapStateToProps = state => {

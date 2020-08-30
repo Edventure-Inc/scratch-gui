@@ -48,6 +48,21 @@ import gdxforConnectionSmallIconURL from './gdxfor/gdxfor-small.svg';
 
 export default [
     {
+        name: '消息积木',
+        extensionId: 'systemMessage',
+        iconURL: '',
+        insetIconURL: '',
+        description: (
+            <FormattedMessage
+                defaultMessage="系统消息积木"
+                description="Description for the 'systemMessage' extension"
+                id="gui.extension.systemMessage.description"
+            />
+        ),
+        featured: true,
+        disabled: false
+    },
+    {
         name: (
             <FormattedMessage
                 defaultMessage="Music"

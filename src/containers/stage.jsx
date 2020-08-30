@@ -80,7 +80,7 @@ class Stage extends React.Component {
         this.attachMouseEvents(this.canvas);
         this.updateRect();
         this.props.vm.runtime.addListener('QUESTION', this.questionListener);
-        if (!this.props.isFullScreen) {
+        if (this.props.stageOnly && !this.props.isFullScreen) {
             this.props.onSetStageFull();
         }
     }
