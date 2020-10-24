@@ -113,7 +113,6 @@ const initialState = {
 
 const reducer = function (state, action) {
     if (typeof state === 'undefined') state = initialState;
-
     switch (action.type) {
     case DONE_CREATING_NEW:
         // We need to set project id since we just created new project on the server.

@@ -1,5 +1,3 @@
-import classNames from 'classnames';
-import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
@@ -18,19 +16,14 @@ if (process.env.NODE_ENV === 'production' && typeof window === 'object') {
 }
 
 import styles from './player.css';
-import {getQueryString} from '../lib/util';
 
-const Player = () => {
-    const projectId = getQueryString('projectId') || '';
-    return (
-        <Box className={styles.stageOnly}>
-            <GUI
-                stageOnly
-                projectId={projectId}
-            />
-        </Box>
-    );
-};
+const Player = () => (
+    <Box className={styles.stageOnly}>
+        <GUI
+            stageOnly
+        />
+    </Box>
+);
 
 const mapStateToProps = state => ({
     isPlayerOnly: state.scratchGui.mode.isPlayerOnly

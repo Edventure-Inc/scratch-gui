@@ -20,6 +20,15 @@ import {
 } from '../reducers/color-picker';
 import {setFullScreen} from '../reducers/mode';
 import {setStageSize} from '../reducers/stage-size';
+import {getQueryString} from '../lib/util';
+import {
+    LoadingStates,
+    onLoadedProject
+} from '../reducers/project-state';
+import {
+    openLoadingProject,
+    closeLoadingProject
+} from '../reducers/modals';
 
 const colorPickerRadius = 20;
 const dragThreshold = 3; // Same as the block drag threshold
@@ -82,6 +91,22 @@ class Stage extends React.Component {
         this.props.vm.runtime.addListener('QUESTION', this.questionListener);
         if (this.props.stageOnly && !this.props.isFullScreen) {
             this.props.onSetStageFull();
+        }
+        const _projectId = getQueryString('projectId');
+        if (this.props.stageOnly && _projectId) {
+            const url = `http://qiauoughz.hn-bkt.clouddn.com/${_projectId}.sb3`;
+            fetch(url).then(res => res.blob())
+                .then(blob => {
+                    const reader = new FileReader();
+                    reader.onload = () => this.props.vm.loadProject(reader.result)
+                        .then(() => {
+                            console.log('加载成功');
+                        });
+                    reader.readAsArrayBuffer(blob);
+                })
+                .catch(err => {
+                    console.log('加载失败', err);
+                });
         }
     }
     shouldComponentUpdate (nextProps, nextState) {
@@ -455,7 +480,10 @@ Stage.propTypes = {
     useEditorDragStyle: PropTypes.bool,
     vm: PropTypes.instanceOf(VM).isRequired,
     stageOnly: PropTypes.bool,
-    onSetStageFull: PropTypes.func
+    onSetStageFull: PropTypes.func,
+    onLoadingFinished: PropTypes.func,
+    onLoadingStarted: PropTypes.func,
+    loadingState: PropTypes.oneOf(LoadingStates)
 };
 
 Stage.defaultProps = {
@@ -475,7 +503,12 @@ const mapDispatchToProps = dispatch => ({
     onActivateColorPicker: () => dispatch(activateColorPicker()),
     onDeactivateColorPicker: color => dispatch(deactivateColorPicker(color)),
     onSetStageFull: () => dispatch(setFullScreen(true)),
-    onSetStageLarge: () => dispatch(setStageSize(STAGE_DISPLAY_SIZES.large))
+    onSetStageLarge: () => dispatch(setStageSize(STAGE_DISPLAY_SIZES.large)),
+    onLoadingFinished: (loadingState, success) => {
+        dispatch(onLoadedProject(loadingState, false, success));
+        dispatch(closeLoadingProject());
+    },
+    onLoadingStarted: () => dispatch(openLoadingProject())
 });
 
 export default connect(

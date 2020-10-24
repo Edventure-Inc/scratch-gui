@@ -1,5 +1,4 @@
-var ExampleExtension = function () {
-};
+const ExampleExtension = function () {};
 
 /**
  * @return {object} This extension's metadata.
@@ -25,7 +24,8 @@ ExampleExtension.prototype.getInfo = function () {
         // Optional: URI for an icon for this extension. Data URI OK.
         // If not present, use a generic icon.
         // TODO: what file types are OK? All web images? Just PNG?
-        iconURI: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAFCAAAAACyOJm3AAAAFklEQVQYV2P4DwMMEMgAI/+DE' +
+        iconURI:
+            'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAFCAAAAACyOJm3AAAAFklEQVQYV2P4DwMMEMgAI/+DE' +
             'UIMBgAEWB7i7uidhAAAAABJRU5ErkJggg==',
 
         // Optional: Link to documentation content for this extension.
@@ -187,7 +187,8 @@ ExampleExtension.prototype.getInfo = function () {
                 'menuB_example': 'Beispiel',
 
                 // This message contains ICU placeholders (see `myReporter()` below)
-                'myReporter.result': 'Buchstabe {LETTER_NUM} von {TEXT} ist {LETTER}.'
+                'myReporter.result':
+                    'Buchstabe {LETTER_NUM} von {TEXT} ist {LETTER}.'
             },
             it: {
                 // ...
@@ -213,11 +214,18 @@ ExampleExtension.prototype.myReporter = function (args) {
     // Note: this implementation is not Unicode-clean; it's just here as an example.
     const result = args.TEXT.charAt(args.LETTER_NUM);
 
-    return ['Letter ', args.LETTER_NUM, ' of ', args.TEXT, ' is ', result, '.'].join('');
+    return [
+        'Letter ',
+        args.LETTER_NUM,
+        ' of ',
+        args.TEXT,
+        ' is ',
+        result,
+        '.'
+    ].join('');
 };
 
-ExampleExtension.prototype.noop = function () {
-};
+ExampleExtension.prototype.noop = function () {};
 
 ExampleExtension.prototype.returnTrue = function () {
     return true;
