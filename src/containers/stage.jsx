@@ -32,7 +32,7 @@ import {
 
 const colorPickerRadius = 20;
 const dragThreshold = 3; // Same as the block drag threshold
-
+const QNUrl = 'http://static.gagakid.com/';
 class Stage extends React.Component {
     constructor (props) {
         super(props);
@@ -94,7 +94,7 @@ class Stage extends React.Component {
         }
         const _projectId = getQueryString('projectId');
         if (this.props.stageOnly && _projectId) {
-            const url = `http://qiauoughz.hn-bkt.clouddn.com/${_projectId}.sb3`;
+            const url = `${QNUrl}${_projectId}.sb3`;
             fetch(url).then(res => res.blob())
                 .then(blob => {
                     const reader = new FileReader();
