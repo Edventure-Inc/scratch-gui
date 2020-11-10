@@ -3,7 +3,7 @@ import React from 'react';
 import {compose} from 'redux';
 import {connect} from 'react-redux';
 import ReactModal from 'react-modal';
-import VM from 'scratch-vm';
+import VM from 'scratch-vm-runkid';
 import {injectIntl, intlShape} from 'react-intl';
 import ErrorBoundaryHOC from '../lib/error-boundary-hoc.jsx';
 import {
