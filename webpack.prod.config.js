@@ -12,10 +12,10 @@ var autoprefixer = require('autoprefixer');
 var postcssVars = require('postcss-simple-vars');
 var postcssImport = require('postcss-import');
 
-const STATIC_PATH = process.env.STATIC_PATH || '/static';
+const STATIC_PATH = 'http://static.gagakid.com/scratch-gui/';
 
 const base = {
-    mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+    mode: 'production',
     devtool: 'cheap-module-source-map',
     devServer: {
         contentBase: path.resolve(__dirname, 'build'),
@@ -25,8 +25,7 @@ const base = {
     output: {
         library: 'GUI',
         filename: '[name].js',
-        chunkFilename: 'chunks/[name].js',
-        publicPath: 'http://static.gagakid.com/scratch-gui/'
+        chunkFilename: 'chunks/[name].js'
     },
     externals: {
         React: 'react',
@@ -125,7 +124,8 @@ module.exports = [
                     test: /\.(svg|png|wav|gif|jpg)$/,
                     loader: 'file-loader',
                     options: {
-                        outputPath: 'static/assets/'
+                        outputPath: 'static/assets/',
+                        publicPath: STATIC_PATH
                     }
                 }
             ])
@@ -141,7 +141,7 @@ module.exports = [
         },
         plugins: base.plugins.concat([
             new webpack.DefinePlugin({
-                'process.env.NODE_ENV': '"' + process.env.NODE_ENV + '"',
+                'process.env.NODE_ENV': '"production"',
                 'process.env.DEBUG': Boolean(process.env.DEBUG),
                 'process.env.GA_ID': '"' + (process.env.GA_ID || 'UA-000000-01') + '"'
             }),
@@ -179,6 +179,7 @@ module.exports = [
                 from: 'static',
                 to: 'static'
             }]),
+            // 这里是scratch-blocks的资源 没办法使用publicPath处理 所以需要把build/static/blocks-media一起复制到服务器上
             new CopyWebpackPlugin([{
                 from: 'node_modules/scratch-blocks/media',
                 to: 'static/blocks-media'
@@ -195,49 +196,47 @@ module.exports = [
         ])
     })
 ].concat(
-    process.env.NODE_ENV === 'production' || process.env.BUILD_MODE === 'dist' ? (
-        // export as library
-        defaultsDeep({}, base, {
-            target: 'web',
-            entry: {
-                'scratch-gui': './src/index.js'
-            },
-            output: {
-                libraryTarget: 'umd',
-                path: path.resolve('dist'),
-                publicPath: `${STATIC_PATH}/`
-            },
-            externals: {
-                React: 'react',
-                ReactDOM: 'react-dom'
-            },
-            module: {
-                rules: base.module.rules.concat([
-                    {
-                        test: /\.(svg|png|wav|gif|jpg)$/,
-                        loader: 'file-loader',
-                        options: {
-                            outputPath: 'static/assets/',
-                            publicPath: `${STATIC_PATH}/assets/`
-                        }
+    defaultsDeep({}, base, {
+        target: 'web',
+        entry: {
+            'scratch-gui': './src/index.js'
+        },
+        output: {
+            libraryTarget: 'umd',
+            path: path.resolve('dist'),
+            publicPath: STATIC_PATH
+        },
+        externals: {
+            React: 'react',
+            ReactDOM: 'react-dom'
+        },
+        module: {
+            rules: base.module.rules.concat([
+                {
+                    test: /\.(svg|png|wav|gif|jpg)$/,
+                    loader: 'file-loader',
+                    options: {
+                        outputPath: 'static/assets/',
+                        publicPath: STATIC_PATH
                     }
-                ])
-            },
-            plugins: base.plugins.concat([
-                new CopyWebpackPlugin([{
-                    from: 'node_modules/scratch-blocks/media',
-                    to: 'static/blocks-media'
-                }]),
-                new CopyWebpackPlugin([{
-                    from: 'extension-worker.{js,js.map}',
-                    context: 'node_modules/scratch-vm-runkid/dist/web'
-                }]),
-                // Include library JSON files for scratch-desktop to use for downloading
-                new CopyWebpackPlugin([{
-                    from: 'src/lib/libraries/*.json',
-                    to: 'libraries',
-                    flatten: true
-                }])
+                }
             ])
-        })) : []
+        },
+        plugins: base.plugins.concat([
+            new CopyWebpackPlugin([{
+                from: 'node_modules/scratch-blocks/media',
+                to: 'static/blocks-media'
+            }]),
+            new CopyWebpackPlugin([{
+                from: 'extension-worker.{js,js.map}',
+                context: 'node_modules/scratch-vm-runkid/dist/web'
+            }]),
+            // Include library JSON files for scratch-desktop to use for downloading
+            new CopyWebpackPlugin([{
+                from: 'src/lib/libraries/*.json',
+                to: 'libraries',
+                flatten: true
+            }])
+        ])
+    })
 );
