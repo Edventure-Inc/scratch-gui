@@ -92,14 +92,14 @@ class Stage extends React.Component {
         if (this.props.stageOnly && !this.props.isFullScreen) {
             this.props.onSetStageFull();
         }
-        const _projectId = getQueryString('projectId');
-        if (this.props.stageOnly && _projectId) {
-            const url = `${QNUrl}${_projectId}.sb3`;
-            fetch(url).then(res => res.blob())
+        const _projectUrl = getQueryString('projectUrl');
+        if (this.props.stageOnly && _projectUrl) {
+            fetch(_projectUrl).then(res => res.blob())
                 .then(blob => {
                     const reader = new FileReader();
                     reader.onload = () => this.props.vm.loadProject(reader.result)
                         .then(() => {
+                            this.props.vm.start();
                             console.log('加载成功');
                         });
                     reader.readAsArrayBuffer(blob);
