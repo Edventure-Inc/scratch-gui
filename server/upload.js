@@ -26,7 +26,7 @@ function uploadFile (filePath, fileName) {
         console.log(`文件${fileName}不存在`);
         return;
     }
-    const middlePath = filePath.replace(`${path.resolve(__dirname, '../dist') }/`, '');
+    const middlePath = filePath.replace(`${path.resolve(__dirname, '../build') }/`, '');
     const key = `${QNPath}${middlePath}`;
     const uploadToken = new qiniu.rs.PutPolicy({scope: `${BUCKET}:${key}`}).uploadToken(mac);
     formUpload.putFile(uploadToken, key, filePath, putExtra, (err, res, resInfo) => {
@@ -56,7 +56,7 @@ function refreshUrls (urls = []) {
 }
 
 const listFile = (dirPath) => {
-    const dir = path.resolve(__dirname, dirPath || '../dist');
+    const dir = path.resolve(__dirname, dirPath || '../build');
     const arr = fs.readdirSync(dir);
     arr.map((file) => {
         const filePath = path.join(dir, file);
