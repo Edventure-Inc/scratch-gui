@@ -6,7 +6,6 @@ const AK = '1RboPKatE7pRx7QZhkaIbC-BSd8-aG8HZCp8UCMp';
 const SK = 'EtNJonldCtifgAIK5JrHtJbMx-V388lMoG6UrQ5c';
 const BUCKET = 'runkid-static';
 const QNPath = 'scratch-gui/';
-
 function uploadFile (filePath, fileName) {
     if (!filePath) {
         console.log('文件路径异常', filePath);
@@ -21,16 +20,16 @@ function uploadFile (filePath, fileName) {
     config.zone = qiniu.zone.Zone_z2;
     config.useHttpsDomain = true;
     config.useCdnDomain = true;
-    config.force = true;
     const formUpload = new qiniu.form_up.FormUploader(config);
     const putExtra = new qiniu.form_up.PutExtra();
     if (!fs.existsSync(filePath)) {
         console.log(`文件${fileName}不存在`);
         return;
     }
-    const uploadToken = new qiniu.rs.PutPolicy({scope: BUCKET}).uploadToken(mac);
-    const middlePath = filePath.replace(`${path.resolve(__dirname, '../build') }/`, '');
-    formUpload.putFile(uploadToken, `${QNPath}${middlePath}`, filePath, putExtra, (err, res, resInfo) => {
+    const middlePath = filePath.replace(`${path.resolve(__dirname, '../dist') }/`, '');
+    const key = `${QNPath}${middlePath}`;
+    const uploadToken = new qiniu.rs.PutPolicy({scope: `${BUCKET}:${key}`}).uploadToken(mac);
+    formUpload.putFile(uploadToken, key, filePath, putExtra, (err, res, resInfo) => {
         if (err) {
             throw err;
         }
@@ -57,7 +56,7 @@ function refreshUrls (urls = []) {
 }
 
 const listFile = (dirPath) => {
-    const dir = path.resolve(__dirname, dirPath || '../build');
+    const dir = path.resolve(__dirname, dirPath || '../dist');
     const arr = fs.readdirSync(dir);
     arr.map((file) => {
         const filePath = path.join(dir, file);
@@ -71,6 +70,7 @@ const listFile = (dirPath) => {
 
 function upload () {
     try {
+        console.log('开始上传');
         listFile();
     } catch (error) {
         console.log('上传失败，请重试：', error);
