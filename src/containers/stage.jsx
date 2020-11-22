@@ -99,17 +99,17 @@ class Stage extends React.Component {
                     const reader = new FileReader();
                     reader.onload = () => this.props.vm.loadProject(reader.result)
                         .then(() => {
-                            // this.props.vm.start();
-                            this.props.vm.start();
-                            this.props.vm.greenFlag();
-                            // 通知页面加载成功
-                            if (window.parent) {
-                                window.parent.postMessage({
+                            // 延迟执行
+                            setTimeout(() => {
+                                this.props.vm.start();
+                                this.props.vm.greenFlag();
+                                // 通知页面加载成功
+                                parent.postMessage({
                                     type: 'SCRATCH_LOAD_SUCCESS',
                                     msg: _projectUrl
                                 }, '*');
-                            }
-                            console.log('加载成功');
+                                console.log('加载成功');
+                            }, 0);
                         });
                     reader.readAsArrayBuffer(blob);
                 })
