@@ -125,7 +125,7 @@ module.exports = [
                     loader: 'file-loader',
                     options: {
                         outputPath: 'static/assets/',
-                        publicPath: STATIC_PATH
+                        publicPath: STATIC_PATH + 'static/assets/'
                     }
                 }
             ])
@@ -217,7 +217,7 @@ module.exports = [
                     loader: 'file-loader',
                     options: {
                         outputPath: 'static/assets/',
-                        publicPath: STATIC_PATH
+                        publicPath: STATIC_PATH + 'static/assets/'
                     }
                 }
             ])
