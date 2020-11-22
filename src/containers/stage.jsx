@@ -97,11 +97,11 @@ class Stage extends React.Component {
             fetch(_projectUrl).then(res => res.blob())
                 .then(blob => {
                     const reader = new FileReader();
+                    this.props.vm.start();
                     reader.onload = () => this.props.vm.loadProject(reader.result)
                         .then(() => {
-                            // 延迟执行
+                        // 延迟执行
                             setTimeout(() => {
-                                this.props.vm.start();
                                 this.props.vm.greenFlag();
                                 // 通知页面加载成功
                                 parent.postMessage({
