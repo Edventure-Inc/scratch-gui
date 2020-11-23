@@ -32,7 +32,6 @@ import {
 
 const colorPickerRadius = 20;
 const dragThreshold = 3; // Same as the block drag threshold
-const QNUrl = 'http://static.gagakid.com/';
 class Stage extends React.Component {
     constructor (props) {
         super(props);

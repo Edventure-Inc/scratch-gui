@@ -12,7 +12,7 @@ var autoprefixer = require('autoprefixer');
 var postcssVars = require('postcss-simple-vars');
 var postcssImport = require('postcss-import');
 
-const STATIC_PATH = 'http://static.gagakid.com/scratch-gui/';
+const STATIC_PATH = 'https://static.gagakid.com/scratch-gui/';
 
 const base = {
     mode: 'production',
