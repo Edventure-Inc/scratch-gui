@@ -18,7 +18,7 @@ const base = {
     mode: 'production',
     devtool: 'cheap-module-source-map',
     devServer: {
-        contentBase: path.resolve(__dirname, 'build'),
+        contentBase: path.resolve(__dirname, 'dist'),
         host: '0.0.0.0',
         port: process.env.PORT || 8601
     },
@@ -111,7 +111,7 @@ module.exports = [
             'stage': './src/playground/stage.jsx'
         },
         output: {
-            path: path.resolve(__dirname, 'build'),
+            path: path.resolve(__dirname, 'dist'),
             filename: '[name].js'
         },
         externals: {
@@ -179,7 +179,7 @@ module.exports = [
                 from: 'static',
                 to: 'static'
             }]),
-            // 这里是scratch-blocks的资源 没办法使用publicPath处理 所以需要把build/static/blocks-media一起复制到服务器上
+            // 这里是scratch-blocks的资源 没办法使用publicPath处理 所以需要把dist/static/blocks-media一起复制到服务器上
             new CopyWebpackPlugin([{
                 from: 'node_modules/scratch-blocks/media',
                 to: 'static/blocks-media'
