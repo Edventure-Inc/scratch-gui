@@ -93,6 +93,7 @@ class Stage extends React.Component {
         }
         const _projectUrl = getQueryString('projectUrl');
         if (this.props.stageOnly && _projectUrl) {
+            document.addEventListener('click', this.handleClickFocus);
             fetch(_projectUrl).then(res => res.blob())
                 .then(blob => {
                     const reader = new FileReader();
@@ -141,6 +142,10 @@ class Stage extends React.Component {
         this.detachRectEvents();
         this.stopColorPickingLoop();
         this.props.vm.runtime.removeListener('QUESTION', this.questionListener);
+        document.removeEventListener('click', this.handleClickFocus);
+    }
+    handleClickFocus () {
+        window.focus();
     }
     questionListener (question) {
         this.setState({question: question});
