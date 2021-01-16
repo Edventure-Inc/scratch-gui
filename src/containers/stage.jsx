@@ -97,9 +97,10 @@ class Stage extends React.Component {
                 .then(blob => {
                     const reader = new FileReader();
                     this.props.vm.start();
+                    // this.props.vm.greenFlag();
                     reader.onload = () => this.props.vm.loadProject(reader.result)
                         .then(() => {
-                        // 延迟执行
+                            // 延迟执行
                             setTimeout(() => {
                                 this.props.vm.greenFlag();
                                 // 通知页面加载成功
