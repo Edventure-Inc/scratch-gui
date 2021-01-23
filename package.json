@@ -147,6 +147,6 @@
     }
   },
   "dependencies": {
-    "scratch-vm-runkid": "^0.4.0"
+    "scratch-vm-runkid": "^0.5.0"
   }
 }
