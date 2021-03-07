@@ -6,6 +6,7 @@ var webpack = require('webpack');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+// const CompressionPlugin = require('compression-webpack-plugin');
 
 // PostCss
 var autoprefixer = require('autoprefixer');
@@ -237,6 +238,9 @@ module.exports = [
                 to: 'libraries',
                 flatten: true
             }])
+            // new CompressionPlugin({
+            //     test: /\.js/
+            // })
         ])
     })
 );
