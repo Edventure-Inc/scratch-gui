@@ -148,6 +148,6 @@
     }
   },
   "dependencies": {
-    "scratch-vm-runkid": "^0.5.3"
+    "scratch-vm-runkid": "^0.5.4"
   }
 }
